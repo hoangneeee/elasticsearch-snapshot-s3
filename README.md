@@ -6,7 +6,7 @@ This project provides Docker images to periodically back up a Elasticsearch to A
 ```yaml
 services:
   backup:
-    image: vohoang/elasticsearch-backup-s3:latest
+    image: vohoang/elasticsearch-snapshot-s3:latest
     environment:
       SCHEDULE: '@weekly'     # optional
       BACKUP_KEEP_DAYS: 7     # optional
