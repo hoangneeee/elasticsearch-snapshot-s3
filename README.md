@@ -29,4 +29,8 @@ services:
 - If `BACKUP_KEEP_DAYS` is set, backups older than this many days will be deleted from S3.
 - Set `S3_ENDPOINT` if you're using a non-AWS S3-compatible storage provider.
 
-
+# Development
+## Build the image locally
+```sh
+DOCKER_BUILDKIT=1 docker build --build-arg ALPINE_VERSION=3.14 .
+```
