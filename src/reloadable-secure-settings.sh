@@ -1,15 +1,23 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
 set -eu
 set -o pipefail
 
 source ./env.sh
 
+## Reload secure settings
 ## https://www.elastic.co/guide/en/elasticsearch/reference/8.9/secure-settings.html
 #
-curl -u "$ELASTICSEARCH_USERNAME:$ELASTICSEARCH_PASSWORD" -X POST "$ELASTICSEARCH_HOST/_snapshot/$ELASTICSEARCH_REPO_NAME" -H 'Content-Type: application/json'
+function reload_secure_settings() {
+    local -a args=( '-s' '-D-' '-m15' '-X' 'POST' "${ELASTICSEARCH_HOST}/_nodes/reload_secure_settings?pretty" )
 
-curl -u "elastic:changeme" -X POST "localhost:9200/_nodes/reload_secure_settings?pretty" -H 'Content-Type: application/json' -d'
-{
-  "secure_settings_password": "protocol"
-}'
+    if [[ -n "${ELASTICSEARCH_PASSWORD:-}" ]]; then
+    		args+=( '-u' "${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}" )
+    fi
+    log "Reloadable secure settings..."
+    curl "${args[@]}"
+}
+
+reload_secure_settings
+
+
